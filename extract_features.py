@@ -90,7 +90,7 @@ class InputFeatures(object):
   """A single set of features of data."""
 
   def __init__(self, unique_id, tokens, input_ids, input_mask, input_type_ids):
-    self.unique_id = unique_id
+    self.unique_id = unique_id #todo(rooh) numbers from 0 to the number of input examples
     self.tokens = tokens
     self.input_ids = input_ids
     self.input_mask = input_mask
