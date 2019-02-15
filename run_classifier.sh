@@ -1,3 +1,15 @@
-#!/usr/bin/env bash
 
-python run_classifier.py --task_name=MRPC --do_train=true --do_eval=true --data_dir=/home/rohola/Codes/Python/bert/glue_data/MRPC --vocab_file=bert/uncased_L-12_H-768_A-12/vocab.txt --bert_config_file=bert/uncased_L-12_H-768_A-12/bert_config.json --init_checkpoint=bert/uncased_L-12_H-768_A-12/bert_model.ckpt --max_seq_length=128 --train_batch_size=32 --learning_rate=2e-5 --num_train_epochs=3.0 --output_dir=mrpc_output/
+export CUDA_VISIBLE_DEVICES=2
+
+python run_classifier.py --task_name=MRPC \
+--do_train=true \
+--do_eval=true \
+--data_dir=/home/rohola/codes/bert/glue_data/MRPC \
+--vocab_file=/home/rohola/codes/bert/uncased_L-12_H-768_A-12/vocab.txt \
+--bert_config_file=/home/rohola/codes/bert/uncased_L-12_H-768_A-12/bert_config.json \
+--init_checkpoint=/home/rohola/codes/bert/uncased_L-12_H-768_A-12/bert_model.ckpt \
+--max_seq_length=128 \
+--train_batch_size=32 \
+--learning_rate=2e-5 \
+--num_train_epochs=3.0 \
+--output_dir=/home/rohola/codes/outputs/mrpc_output/
