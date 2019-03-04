@@ -988,3 +988,28 @@ For help or issues using BERT, please submit a GitHub issue.
 For personal communication related to BERT, please contact Jacob Devlin
 (`jacobdevlin@google.com`), Ming-Wei Chang (`mingweichang@google.com`), or
 Kenton Lee (`kentonl@google.com`).
+
+
+
+
+## Added by rohola
+in run pretraining, we use already masked inputs as tfrecord inputs.
+
+it starts with create_pretraining_data (input: raw text file, a collection of documents separated by enter,
+                                        output: tfrecords)
+run_pretraining (input: tfrecords,
+                 output: )
+                 
+#this part needs more inspection
+it seems like in create_pretraining_data we don't have a concept of padding. we just use as much
+sequence as we can and then we cut it(from both source and target sequences) until it fits the max_seq_length
+we only have masked_position that we should take care of in the next steps(like in run_pretraining)
+
+but in other cases like in extract_features that we read data from new input files we do padding to max_seq_length
+ and then we do the rest
+ 
+ 
+ - do not include init_checkpoint if you want to pretrain from scratch
+ - use the vocab.txt provided
+ - do_lower_case=True in create pretraining for uncased
+ - using cosine decay for evolved transformer

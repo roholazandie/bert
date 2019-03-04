@@ -240,7 +240,7 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
 def get_masked_lm_output(bert_config, input_tensor, output_weights, positions,
                          label_ids, label_weights):
   """Get loss and log probs for the masked LM."""
-  input_tensor = gather_indexes(input_tensor, positions)
+  input_tensor = gather_indexes(input_tensor, positions)#todo (rooh) gather only masked position from seq output tensor
 
   with tf.variable_scope("cls/predictions"):
     # We apply one more non-linear transformation before the output layer.
