@@ -3,8 +3,8 @@
 
 
 
-python create_pretraining_data.py --input_file=/media/data/rohola_data/cleaned_wiki.txt \
---output_file=/media/data/rohola_data/tf_wiki.tfrecord \
+python create_pretraining_data.py --input_file=/media/data/rohola_data/chunk_3.txt \
+--output_file=/media/data/rohola_data/tf_wiki_3.tfrecord \
 --vocab_file=/home/rohola/codes/bert/uncased_L-12_H-768_A-12/vocab.txt \
 --do_lower_case=True \
 --max_seq_length=128 \
