@@ -1013,3 +1013,8 @@ but in other cases like in extract_features that we read data from new input fil
  - use the vocab.txt provided
  - do_lower_case=True in create pretraining for uncased
  - using cosine decay for evolved transformer
+ 
+ #flags
+ flags in tensorflow are easier to use because you can either run them with defined values in the script, or 
+ pass the values to the script as you run the script like:
+  main.py --do_train=True

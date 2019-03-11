@@ -753,6 +753,29 @@ def attention_layer(from_tensor,
     return context_layer
 
 
+def evolved_transformer_model(input_tensor,
+                              attention_mask=None,
+                              hidden_size=768,
+                              num_hidden_layers=12,
+                              num_attention_heads=12,
+                              intermediate_size=3072,
+                              intermediate_act_fn=gelu,
+                              hidden_dropout_prob=0.1,
+                              attention_probs_dropout_prob=0.1,
+                              initializer_range=0.02,
+                              do_return_all_layers=False):
+    #encoder_input = input_tensor
+    #ecnoder_self_attention_bias = attention_mask
+    #here attention_bias and padding are the same
+
+    pass
+
+
+
+
+
+
+
 def transformer_model(input_tensor,
                       attention_mask=None,
                       hidden_size=768,
