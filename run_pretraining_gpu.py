@@ -191,11 +191,17 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
             train_op = optimization.create_optimizer(
                 total_loss, learning_rate, num_train_steps, num_warmup_steps, use_tpu)
 
-            output_spec = tf.contrib.tpu.TPUEstimatorSpec(
-                mode=mode,
-                loss=total_loss,
-                train_op=train_op,
-                scaffold_fn=scaffold_fn)
+            # output_spec = tf.contrib.tpu.TPUEstimatorSpec(
+            #     mode=mode,
+            #     loss=total_loss,
+            #     train_op=train_op,
+            #     scaffold_fn=scaffold_fn)
+
+            output_spec = tf.estimator.EstimatorSpec(mode=mode,
+                                                     loss=total_loss,
+                                                     train_op=train_op,
+                                                     scaffold=scaffold_fn)
+
         elif mode == tf.estimator.ModeKeys.EVAL:
 
             def metric_fn(masked_lm_example_loss, masked_lm_log_probs, masked_lm_ids,
@@ -238,11 +244,18 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
                 masked_lm_weights, next_sentence_example_loss,
                 next_sentence_log_probs, next_sentence_labels
             ])
-            output_spec = tf.contrib.tpu.TPUEstimatorSpec(
-                mode=mode,
-                loss=total_loss,
-                eval_metrics=eval_metrics,
-                scaffold_fn=scaffold_fn)
+            # output_spec = tf.contrib.tpu.TPUEstimatorSpec(
+            #     mode=mode,
+            #     loss=total_loss,
+            #     eval_metrics=eval_metrics,
+            #     scaffold_fn=scaffold_fn)
+
+            output_spec = tf.estimator.EstimatorSpec(mode=mode,
+                                                     loss=total_loss,
+                                                     eval_metric_ops=eval_metrics,
+                                                     scaffold=scaffold_fn)
+
+
         else:
             raise ValueError("Only TRAIN and EVAL modes are supported: %s" % (mode))
 
@@ -346,7 +359,7 @@ def input_fn_builder(input_files,
 
     def input_fn(params):
         """The actual input function."""
-        #batch_size = params["batch_size"]
+        # batch_size = params["batch_size"]
 
         name_to_features = {
             "input_ids":
@@ -453,7 +466,7 @@ def main(_):
     #         num_shards=FLAGS.num_tpu_cores,
     #         per_host_input_for_training=is_per_host))
 
-    distribution = tf.contrib.distribute.MirroredStrategy(num_gpus=4)
+    distribution = tf.contrib.distribute.MirroredStrategy()
     run_config = tf.estimator.RunConfig(train_distribute=distribution,
                                         model_dir=FLAGS.output_dir,
                                         save_checkpoints_steps=FLAGS.save_checkpoints_steps)
@@ -466,8 +479,6 @@ def main(_):
         num_warmup_steps=FLAGS.num_warmup_steps,
         use_tpu=FLAGS.use_tpu,
         use_one_hot_embeddings=FLAGS.use_tpu)
-
-
 
     estimator = tf.estimator.Estimator(model_fn=model_fn,
                                        config=run_config)
