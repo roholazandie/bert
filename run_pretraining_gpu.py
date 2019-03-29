@@ -466,7 +466,7 @@ def main(_):
     #         num_shards=FLAGS.num_tpu_cores,
     #         per_host_input_for_training=is_per_host))
 
-    distribution = tf.contrib.distribute.MirroredStrategy()
+    distribution = tf.contrib.distribute.MirroredStrategy(num_gpus=1)
     run_config = tf.estimator.RunConfig(train_distribute=distribution,
                                         model_dir=FLAGS.output_dir,
                                         save_checkpoints_steps=FLAGS.save_checkpoints_steps)
