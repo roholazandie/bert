@@ -22,6 +22,7 @@ import os
 import modeling
 import optimization
 import tensorflow as tf
+import time
 
 flags = tf.flags
 
@@ -104,6 +105,19 @@ tf.flags.DEFINE_string("master", None, "[Optional] TensorFlow master URL.")
 flags.DEFINE_integer(
     "num_tpu_cores", 8,
     "Only used if `use_tpu` is True. Total number of TPU cores to use.")
+
+
+class TimeHistory(tf.train.SessionRunHook):
+    def begin(self):
+        self.times = []
+
+    def before_run(self, run_context):
+        self.iter_time_start = time.time()
+
+    def after_run(self, run_context, run_values):
+        self.times.append(time.time() - self.iter_time_start)
+        loss_value = run_values.results
+        print("loss value:", loss_value)
 
 
 def model_fn_builder(bert_config, init_checkpoint, learning_rate,
@@ -439,7 +453,7 @@ def main(_):
     #         num_shards=FLAGS.num_tpu_cores,
     #         per_host_input_for_training=is_per_host))
 
-    distribution = tf.contrib.distribute.MirroredStrategy()
+    distribution = tf.contrib.distribute.MirroredStrategy(num_gpus=4)
     run_config = tf.estimator.RunConfig(train_distribute=distribution,
                                         model_dir=FLAGS.output_dir,
                                         save_checkpoints_steps=FLAGS.save_checkpoints_steps)
@@ -466,6 +480,8 @@ def main(_):
     #     train_batch_size=FLAGS.train_batch_size,
     #     eval_batch_size=FLAGS.eval_batch_size)
 
+    time_hist = TimeHistory()
+
     if FLAGS.do_train:
         tf.logging.info("***** Running training *****")
         tf.logging.info("  Batch size = %d", FLAGS.train_batch_size)
@@ -475,7 +491,7 @@ def main(_):
             max_predictions_per_seq=FLAGS.max_predictions_per_seq,
             batch_size=FLAGS.train_batch_size,
             is_training=True)
-        estimator.train(input_fn=train_input_fn, max_steps=FLAGS.num_train_steps)
+        estimator.train(input_fn=train_input_fn, max_steps=FLAGS.num_train_steps, hooks=[time_hist])
 
     if FLAGS.do_eval:
         tf.logging.info("***** Running evaluation *****")
@@ -488,7 +504,7 @@ def main(_):
             batch_size=FLAGS.eval_batch_size,
             is_training=False)
 
-        result = estimator.evaluate(input_fn=eval_input_fn, steps=FLAGS.max_eval_steps)
+        result = estimator.evaluate(input_fn=eval_input_fn, steps=FLAGS.max_eval_steps, hooks=[time_hist])
 
         output_eval_file = os.path.join(FLAGS.output_dir, "eval_results.txt")
         with tf.gfile.GFile(output_eval_file, "w") as writer:
