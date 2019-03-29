@@ -326,12 +326,13 @@ def input_fn_builder(input_files,
                      max_seq_length,
                      max_predictions_per_seq,
                      is_training,
+                     batch_size,
                      num_cpu_threads=4):
     """Creates an `input_fn` closure to be passed to TPUEstimator."""
 
     def input_fn(params):
         """The actual input function."""
-        batch_size = params["batch_size"]
+        #batch_size = params["batch_size"]
 
         name_to_features = {
             "input_ids":
@@ -472,6 +473,7 @@ def main(_):
             input_files=input_files,
             max_seq_length=FLAGS.max_seq_length,
             max_predictions_per_seq=FLAGS.max_predictions_per_seq,
+            batch_size=FLAGS.train_batch_size,
             is_training=True)
         estimator.train(input_fn=train_input_fn, max_steps=FLAGS.num_train_steps)
 
@@ -483,10 +485,10 @@ def main(_):
             input_files=input_files,
             max_seq_length=FLAGS.max_seq_length,
             max_predictions_per_seq=FLAGS.max_predictions_per_seq,
+            batch_size=FLAGS.eval_batch_size,
             is_training=False)
 
-        result = estimator.evaluate(
-            input_fn=eval_input_fn, steps=FLAGS.max_eval_steps)
+        result = estimator.evaluate(input_fn=eval_input_fn, steps=FLAGS.max_eval_steps)
 
         output_eval_file = os.path.join(FLAGS.output_dir, "eval_results.txt")
         with tf.gfile.GFile(output_eval_file, "w") as writer:
