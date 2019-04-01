@@ -65,7 +65,7 @@ def create_optimizer(loss, init_lr, num_train_steps, num_warmup_steps, use_tpu):
     #     epsilon=1e-6,
     #     exclude_from_weight_decay=["LayerNorm", "layer_norm", "bias"])
 
-    optimizer = tf.train.AdadeltaOptimizer(learning_rate=learning_rate)
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
 
     if use_tpu:
         optimizer = tf.contrib.tpu.CrossShardOptimizer(optimizer)
