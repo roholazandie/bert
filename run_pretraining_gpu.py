@@ -441,6 +441,8 @@ def _decode_record(record, name_to_features):
 
 
 def main(_):
+    t1 = time.time()
+
     tf.logging.set_verbosity(tf.logging.INFO)
 
     if not FLAGS.do_train and not FLAGS.do_eval:
@@ -532,13 +534,15 @@ def main(_):
                 tf.logging.info("  %s = %s", key, str(result[key]))
                 writer.write("%s = %s\n" % (key, str(result[key])))
 
+    t2 = time.time()
+    tf.logging.info("Total time: " + str(t2 - t1))
+    print("Total time: " + str(t2 - t1))
+
 
 if __name__ == "__main__":
     flags.mark_flag_as_required("input_file")
     flags.mark_flag_as_required("bert_config_file")
     flags.mark_flag_as_required("output_dir")
-    t1 = time.time()
     tf.app.run()
-    t2 = time.time()
-    tf.logging.info("Total time: "+str(t2-t1))
-    print("Total time: "+str(t2-t1))
+
+
