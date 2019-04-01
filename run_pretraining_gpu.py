@@ -541,3 +541,4 @@ if __name__ == "__main__":
     tf.app.run()
     t2 = time.time()
     tf.logging.info("Total time: "+str(t2-t1))
+    print("Total time: "+str(t2-t1))
