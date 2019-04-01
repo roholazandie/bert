@@ -502,7 +502,7 @@ def main(_):
             max_predictions_per_seq=FLAGS.max_predictions_per_seq,
             batch_size=FLAGS.train_batch_size,
             is_training=True)
-        estimator.train(input_fn=train_input_fn, max_steps=FLAGS.num_train_steps, hooks=[time_hist])
+        estimator.train(input_fn=train_input_fn, max_steps=FLAGS.num_train_steps)
 
     if FLAGS.do_eval:
         tf.logging.info("***** Running evaluation *****")
@@ -515,7 +515,7 @@ def main(_):
             batch_size=FLAGS.eval_batch_size,
             is_training=False)
 
-        result = estimator.evaluate(input_fn=eval_input_fn, steps=FLAGS.max_eval_steps, hooks=[time_hist])
+        result = estimator.evaluate(input_fn=eval_input_fn, steps=FLAGS.max_eval_steps)
 
         output_eval_file = os.path.join(FLAGS.output_dir, "eval_results.txt")
         with tf.gfile.GFile(output_eval_file, "w") as writer:
