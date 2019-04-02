@@ -536,7 +536,6 @@ def main(_):
 
     t2 = time.time()
     tf.logging.info("Total time: " + str(t2 - t1))
-    print("Total time: " + str(t2 - t1))
 
 
 if __name__ == "__main__":
